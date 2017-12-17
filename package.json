@@ -1,0 +1,9 @@
+{
+  "name": "blockchain-redux",
+  "version": "1.0.0",
+  "description": "A crypto experiment, Redux store backed by blockchain.",
+  "main": "index.js",
+  "author": "Swizec Teller",
+  "license": "MIT",
+  "private": false
+}
