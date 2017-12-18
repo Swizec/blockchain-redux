@@ -8,7 +8,7 @@ function createStore(initialState, reducer) {
                 hash: "0",
                 timestamp: new Date().getTime()
             },
-            data: "genesis block!"
+            data: initialState
         })
     ];
 
@@ -20,7 +20,9 @@ function createStore(initialState, reducer) {
         const lastBlock = getLastBlock();
         const nextData = reducer(lastBlock.data, action);
 
-        blockchain.push(new Block({ previousBlock: lastBlock, data: data }));
+        blockchain.push(
+            new Block({ previousBlock: lastBlock, data: nextData })
+        );
     }
 
     return {
@@ -29,4 +31,4 @@ function createStore(initialState, reducer) {
     };
 }
 
-export default createStore();
+export default createStore;
