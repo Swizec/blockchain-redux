@@ -58,3 +58,21 @@ test("reject bad blocks", t => {
 
     t.end();
 });
+
+test("replaceChain replaces blockchain", t => {
+    const store1 = createStore({ counter: 0 }, rootReducer);
+    const store2 = createStore({ counter: 0 }, rootReducer);
+
+    for (let i = 0; i < 5; i++) {
+        store1.dispatch({ type: "inc" });
+    }
+
+    for (let i = 0; i < 10; i++) {
+        store2.dispatch({ type: "inc" });
+    }
+
+    store1.replaceChain(store2._blockchain);
+
+    t.equal(store1.getState().counter, store2.getState().counter);
+    t.end();
+});

@@ -47,11 +47,29 @@ function createStore(initialState, reducer) {
         return true;
     }
 
+    function isValidChain(blockchain) {
+        for (let i = 0; i < blockchain.length - 1; i++) {
+            if (!isValidNewBlock(blockchain[i + 1], blockchain[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function replaceChain(newBlocks) {
+        if (isValidChain(newBlocks) && newBlocks.length > blockchain.length) {
+            blockchain = newBlocks;
+            // tell others here
+        }
+    }
+
     return {
         getState: () => getLastBlock().data,
         getLastBlock: getLastBlock,
         dispatch: dispatch,
-        addBlock: addBlock
+        addBlock: addBlock,
+        replaceChain: replaceChain, // primarily used when starting up to take latest available blockchain
+        _blockchain: blockchain
     };
 }
 
