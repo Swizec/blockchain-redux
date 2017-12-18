@@ -7,7 +7,7 @@ class Block {
         this.timestamp = new Date().getTime() / 1000;
         this.data = data;
 
-        this.hash = this.calculateHash();
+        this.hash = Block.calculateHash(this);
     }
 
     set data(data) {
@@ -18,9 +18,10 @@ class Block {
         return JSON.parse(this._data);
     }
 
-    calculateHash() {
+    // this is where a Proof-of-Work or Proof-of-Stake algo comes in
+    static calculateHash(block) {
         return CryptoJS.SHA256(
-            this.index + this.previousHash + this.timestamp + this._data
+            block.index + block.previousHash + block.timestamp + block._data
         ).toString();
     }
 }

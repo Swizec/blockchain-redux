@@ -20,14 +20,37 @@ function createStore(initialState, reducer) {
         const lastBlock = getLastBlock();
         const nextData = reducer(lastBlock.data, action);
 
-        blockchain.push(
-            new Block({ previousBlock: lastBlock, data: nextData })
-        );
+        addBlock(new Block({ previousBlock: lastBlock, data: nextData }));
+    }
+
+    function addBlock(newBlock) {
+        if (isValidNewBlock(newBlock, getLastBlock())) {
+            blockchain.push(newBlock);
+        }
+    }
+
+    function isValidNewBlock(newBlock, previousBlock) {
+        if (previousBlock.index + 1 !== newBlock.index) {
+            console.log("invalid index");
+            return false;
+        } else if (previousBlock.hash !== newBlock.previousHash) {
+            console.log("invalid previoushash");
+            return false;
+        } else if (Block.calculateHash(newBlock) !== newBlock.hash) {
+            console.log(
+                "invalid hash: ",
+                Block.calculateHash(newBlock),
+                newBlock.hash
+            );
+            return false;
+        }
+        return true;
     }
 
     return {
         getState: () => getLastBlock().data,
-        dispatch: dispatch
+        dispatch: dispatch,
+        isValidNewBlock: isValidNewBlock
     };
 }
 
