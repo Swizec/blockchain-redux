@@ -49,8 +49,9 @@ function createStore(initialState, reducer) {
 
     return {
         getState: () => getLastBlock().data,
+        getLastBlock: getLastBlock,
         dispatch: dispatch,
-        isValidNewBlock: isValidNewBlock
+        addBlock: addBlock
     };
 }
 
