@@ -1,6 +1,19 @@
 import Block from "./Block";
+import { create } from "domain";
 
-function createStore(reducer, preloadedState) {
+function createStore(reducer, preloadedState, enhancer) {
+    if (
+        typeof preloadedState === "function" &&
+        typeof enhancer === "undefined"
+    ) {
+        enhancer = preloadedState;
+        preloadedState = undefined;
+    }
+
+    if (typeof enhancer === "function") {
+        return enhancer(createStore)(reducer, preloadedState);
+    }
+
     let blockchain = [
         new Block({
             previousBlock: {

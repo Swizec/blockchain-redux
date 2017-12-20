@@ -105,3 +105,25 @@ test("unsubscribe from changes", t => {
     t.equal(called, 1);
     t.end();
 });
+
+test("can add middleware", t => {
+    let called = false;
+    function middleware() {
+        return createStore => (...args) => {
+            const store = createStore(...args);
+
+            return Object.assign(store, {
+                addedFunc: () => {
+                    called = true;
+                }
+            });
+        };
+    }
+
+    const store = createStore(rootReducer, middleware());
+
+    store.addedFunc({});
+
+    t.ok(called);
+    t.end();
+});
