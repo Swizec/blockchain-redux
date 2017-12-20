@@ -1,6 +1,6 @@
 import Block from "./Block";
 
-function createStore(initialState, reducer) {
+function createStore(reducer, preloadedState) {
     let blockchain = [
         new Block({
             previousBlock: {
@@ -8,7 +8,7 @@ function createStore(initialState, reducer) {
                 hash: "0",
                 timestamp: new Date().getTime()
             },
-            data: initialState
+            data: preloadedState
         })
     ];
     let listeners = [];
@@ -73,6 +73,8 @@ function createStore(initialState, reducer) {
             // tell others here
         }
     }
+
+    dispatch({ type: "INIT" });
 
     return {
         getState: () => getLastBlock().data,

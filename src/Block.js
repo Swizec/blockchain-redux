@@ -15,7 +15,9 @@ class Block {
     }
 
     get data() {
-        return JSON.parse(this._data);
+        return typeof this._data !== "undefined"
+            ? JSON.parse(this._data)
+            : undefined;
     }
 
     // this is where a Proof-of-Work or Proof-of-Stake algo comes in, I think
