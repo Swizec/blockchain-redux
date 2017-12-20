@@ -11,6 +11,7 @@ function createStore(initialState, reducer) {
             data: initialState
         })
     ];
+    let listeners = [];
 
     function getLastBlock() {
         return blockchain[blockchain.length - 1];
@@ -21,6 +22,16 @@ function createStore(initialState, reducer) {
         const nextData = reducer(lastBlock.data, action);
 
         addBlock(new Block({ previousBlock: lastBlock, data: nextData }));
+
+        listeners.forEach(listener => listener());
+    }
+
+    function subscribe(listener) {
+        listeners.push(listener);
+
+        return function unsubscribe() {
+            listeners.splice(listeners.indexOf(listener), 1);
+        };
     }
 
     function addBlock(newBlock) {
@@ -67,6 +78,8 @@ function createStore(initialState, reducer) {
         getState: () => getLastBlock().data,
         getLastBlock: getLastBlock,
         dispatch: dispatch,
+        subscribe: subscribe,
+
         addBlock: addBlock,
         replaceChain: replaceChain, // primarily used when starting up to take latest available blockchain
         _blockchain: blockchain

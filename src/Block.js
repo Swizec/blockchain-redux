@@ -18,7 +18,7 @@ class Block {
         return JSON.parse(this._data);
     }
 
-    // this is where a Proof-of-Work or Proof-of-Stake algo comes in
+    // this is where a Proof-of-Work or Proof-of-Stake algo comes in, I think
     static calculateHash(block) {
         return CryptoJS.SHA256(
             block.index + block.previousHash + block.timestamp + block._data

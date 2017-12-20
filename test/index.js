@@ -3,8 +3,6 @@ import test from "tape";
 import createStore from "../src/blockchainRedux";
 import Block from "../src/Block";
 
-const store = createStore({ counter: 0 }, rootReducer);
-
 function rootReducer(state, action) {
     switch (action.type) {
         case "inc":
@@ -17,6 +15,8 @@ function rootReducer(state, action) {
 }
 
 test("count to 5", t => {
+    const store = createStore({ counter: 0 }, rootReducer);
+
     for (let i = 0; i < 5; i++) {
         store.dispatch({ type: "inc" });
     }
@@ -26,6 +26,8 @@ test("count to 5", t => {
 });
 
 test("reject bad blocks", t => {
+    const store = createStore({ counter: 0 }, rootReducer);
+
     const lastBlock = store.getLastBlock();
 
     store.addBlock(
@@ -74,5 +76,32 @@ test("replaceChain replaces blockchain", t => {
     store1.replaceChain(store2._blockchain);
 
     t.equal(store1.getState().counter, store2.getState().counter);
+    t.end();
+});
+
+test("subscribe to changes", t => {
+    const store = createStore({ counter: 0 }, rootReducer);
+
+    let called = false;
+
+    store.subscribe(() => (called = true));
+    store.dispatch({ type: "inc" });
+
+    t.ok(called);
+    t.end();
+});
+
+test("unsubscribe from changes", t => {
+    const store = createStore({ counter: 0 }, rootReducer);
+
+    let called = 0;
+
+    const unsub = store.subscribe(() => (called += 1));
+
+    store.dispatch({ type: "inc" });
+    unsub();
+    store.dispatch({ type: "inc" });
+
+    t.equal(called, 1);
     t.end();
 });
