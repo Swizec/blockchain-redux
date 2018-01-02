@@ -1,7 +1,7 @@
-import * as firebase from "firebase";
+import { parse } from "url";
 
-export default function(config) {
-    const db = firebase.initializeApp(config).database();
+export default function(firebaseApp) {
+    const db = firebaseApp.database();
 
     return createStore => (...args) => {
         const store = createStore(...args);
@@ -11,17 +11,48 @@ export default function(config) {
             _dispatch(action);
 
             const newBlock = store.getLastBlock();
-
-            //db.collection("blockchain").add(newBlock);
-            db.ref(`blockchain/${newBlock.index}`).set(newBlock);
+            return saveBlock(newBlock);
         }
 
-        // db.collection("blockchain").onSnapshot(block => {
-        //     store.addBlock(block.data());
-        // });
+        function saveBlock(block) {
+            block._data = block._data || {};
 
-        return Object.assign(store, {
-            dispatch
-        });
+            return db
+                .ref(`blockchain/${block.index}`)
+                .once("value")
+                .then(snapshot => {
+                    if (!snapshot.exists()) {
+                        db.ref(`blockchain/${block.index}`).set(block);
+                        return true;
+                    } else {
+                        // collision resolution somehow
+                        return false;
+                    }
+                });
+        }
+
+        function initFromFirebase() {
+            return db
+                .ref("blockchain")
+                .orderByKey()
+                .once("value")
+                .then(snapshot => snapshot.val())
+                .then(blockchain => {
+                    blockchain = Object.values(blockchain).map(block => {
+                        block.data = block._data ? JSON.parse(block._data) : {};
+                        return block;
+                    });
+
+                    store.replaceChain(blockchain);
+
+                    return Object.assign(store, {
+                        dispatch
+                    });
+                });
+        }
+
+        return Promise.all(store._blockchain.map(saveBlock)).then(
+            initFromFirebase
+        );
     };
 }

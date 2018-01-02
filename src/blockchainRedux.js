@@ -19,6 +19,7 @@ function createStore(reducer, preloadedState, enhancer) {
             previousBlock: {
                 index: 0,
                 hash: "0",
+                data: {},
                 timestamp: new Date().getTime()
             },
             data: preloadedState
@@ -83,7 +84,6 @@ function createStore(reducer, preloadedState, enhancer) {
     function replaceChain(newBlocks) {
         if (isValidChain(newBlocks) && newBlocks.length > blockchain.length) {
             blockchain = newBlocks;
-            // tell others here
         }
     }
 
