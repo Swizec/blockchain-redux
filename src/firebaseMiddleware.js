@@ -16,7 +16,7 @@ export default function(config) {
             db.ref(`blockchain/${newBlock.index}`).set(newBlock);
         }
 
-        // db.collection("blockhain").onSnapshot(block => {
+        // db.collection("blockchain").onSnapshot(block => {
         //     store.addBlock(block.data());
         // });
 
