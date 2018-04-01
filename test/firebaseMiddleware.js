@@ -64,3 +64,16 @@ test("initializes from firebase blockchain", async t => {
         t.end();
     });
 });
+
+test("call subscribers after initialization", async t => {
+    let called = false;
+
+    const store1 = await createStore(
+        rootReducer,
+        firebaseMiddleware(FirebaseApp)
+    );
+    store1.subscribe(() => (called = true));
+
+    t.ok(called);
+    t.end();
+});

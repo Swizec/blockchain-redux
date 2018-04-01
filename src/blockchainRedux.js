@@ -26,6 +26,10 @@ function createStore(reducer, preloadedState, enhancer) {
     ];
     let listeners = [];
 
+    function notifyListeners() {
+        listeners.forEach(listener => listener());
+    }
+
     function getLastBlock() {
         return blockchain[blockchain.length - 1];
     }
@@ -36,7 +40,7 @@ function createStore(reducer, preloadedState, enhancer) {
 
         addBlock(new Block({ previousBlock: lastBlock, data: nextData }));
 
-        listeners.forEach(listener => listener());
+        notifyListeners();
     }
 
     function subscribe(listener) {
@@ -83,6 +87,7 @@ function createStore(reducer, preloadedState, enhancer) {
     function replaceChain(newBlocks) {
         if (isValidChain(newBlocks) && newBlocks.length > blockchain.length) {
             blockchain = newBlocks;
+            notifyListeners();
         }
     }
 
