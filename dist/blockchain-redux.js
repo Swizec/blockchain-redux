@@ -6441,7 +6441,6 @@ Block.calculateHash = function calculateHash (block) {
 Object.defineProperties( Block.prototype, prototypeAccessors );
 
 function createStore(reducer, preloadedState, enhancer) {
-    console.log("HELLO CREATING STORE");
     if (typeof preloadedState === "function" && typeof enhancer === "undefined") {
         enhancer = preloadedState;
         preloadedState = undefined;
@@ -6516,8 +6515,8 @@ function createStore(reducer, preloadedState, enhancer) {
     function replaceChain(newBlocks) {
         if (isValidChain(newBlocks) && newBlocks.length > blockchain.length) {
             blockchain = newBlocks;
-            notifyListeners();
         }
+        notifyListeners();
     }
     
     dispatch({

@@ -1,7 +1,6 @@
 import Block from "./Block";
 
 function createStore(reducer, preloadedState, enhancer) {
-    console.log("HELLO CREATING STORE");
     if (
         typeof preloadedState === "function" &&
         typeof enhancer === "undefined"
@@ -88,8 +87,8 @@ function createStore(reducer, preloadedState, enhancer) {
     function replaceChain(newBlocks) {
         if (isValidChain(newBlocks) && newBlocks.length > blockchain.length) {
             blockchain = newBlocks;
-            notifyListeners();
         }
+        notifyListeners();
     }
 
     dispatch({ type: "INIT" });
