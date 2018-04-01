@@ -1,8 +1,8 @@
 {
     "name": "blockchain-redux",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "A crypto experiment, Redux store backed by blockchain.",
-    "main": "index.js",
+    "main": "dist/blockchain-redux.js",
     "author": "Swizec Teller",
     "license": "MIT",
     "private": false,
@@ -11,13 +11,13 @@
         "firebase": "^4.8.1"
     },
     "devDependencies": {
-        "microbundle": "^0.2.4",
+        "microbundle": "^0.4.4",
         "reify": "^0.13.3",
         "tap-spec": "^4.1.1",
         "tape": "^4.8.0"
     },
     "scripts": {
-        "build": "microbundle",
+        "build": "microbundle -o dist/",
         "dev": "microbundle watch",
         "test": "tape -r reify test/*.js | tap-spec"
     }
