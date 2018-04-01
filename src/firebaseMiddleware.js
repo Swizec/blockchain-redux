@@ -1,5 +1,3 @@
-import { parse } from "url";
-
 export default function(firebaseApp) {
     const db = firebaseApp.database();
 
@@ -25,7 +23,7 @@ export default function(firebaseApp) {
                         db.ref(`blockchain/${block.index}`).set(block);
                         return true;
                     } else {
-                        // collision resolution somehow
+                        // collision resolution?
                         return false;
                     }
                 });
