@@ -86,6 +86,7 @@ function createStore(reducer, preloadedState, enhancer) {
 
     function replaceChain(newBlocks) {
         if (isValidChain(newBlocks) && newBlocks.length > blockchain.length) {
+            console.debug("Replacing old chain with new");
             blockchain = newBlocks;
         }
         notifyListeners();

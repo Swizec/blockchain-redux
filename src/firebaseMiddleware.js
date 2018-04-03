@@ -41,6 +41,8 @@ export default function(firebaseApp) {
                         return block;
                     });
 
+                    console.debug("Got blockchain", blockchain);
+
                     store.replaceChain(blockchain);
 
                     return Object.assign(store, {

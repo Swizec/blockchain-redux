@@ -6514,6 +6514,7 @@ function createStore(reducer, preloadedState, enhancer) {
     
     function replaceChain(newBlocks) {
         if (isValidChain(newBlocks) && newBlocks.length > blockchain.length) {
+            console.debug("Replacing old chain with new");
             blockchain = newBlocks;
         }
         notifyListeners();
@@ -6565,6 +6566,7 @@ function firebaseMiddleware (firebaseApp) {
                     block.data = block._data ? JSON.parse(block._data) : {};
                     return block;
                 });
+                console.debug("Got blockchain", blockchain);
                 store.replaceChain(blockchain);
                 return Object.assign(store, {
                     dispatch: dispatch
