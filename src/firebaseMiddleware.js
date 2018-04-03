@@ -51,7 +51,7 @@ export default function(firebaseApp) {
                 });
         }
 
-        return Promise.all(store._blockchain.map(saveBlock)).then(
+        return Promise.all(store.getWholeChain().map(saveBlock)).then(
             initFromFirebase
         );
     };

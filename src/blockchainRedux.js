@@ -102,7 +102,7 @@ function createStore(reducer, preloadedState, enhancer) {
 
         addBlock: addBlock,
         replaceChain: replaceChain, // primarily used when starting up to take latest available blockchain
-        _blockchain: blockchain
+        getWholeChain: () => blockchain
     };
 }
 

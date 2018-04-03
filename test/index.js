@@ -73,7 +73,7 @@ test("replaceChain replaces blockchain", t => {
         store2.dispatch({ type: "inc" });
     }
 
-    store1.replaceChain(store2._blockchain);
+    store1.replaceChain(store2.getWholeChain());
 
     t.equal(store1.getState().counter, store2.getState().counter);
     t.end();

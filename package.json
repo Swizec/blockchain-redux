@@ -16,7 +16,7 @@
         "tape": "^4.8.0"
     },
     "scripts": {
-        "build": "microbundle -o dist/ --compress false",
+        "build": "microbundle -o dist/ --compress false --external all",
         "dev": "microbundle watch",
         "test": "tape -r reify test/*.js | tap-spec"
     },
