@@ -146,14 +146,25 @@ function firebaseMiddleware (firebaseApp) {
             });
         }
         
+        function listenForNextBlock() {
+            var nextIndex = store.getLastBlock().index + 1;
+            console.log("Listening for", nextIndex);
+            db.ref(("blockchain/" + (block.index))).once("value").then(function (snapshot) {
+                console.log("Received block from outside");
+                store.addBlock(snapshot.val());
+                listenForNextBlock();
+            });
+        }
+        
         function initFromFirebase() {
             return db.ref("blockchain").orderByKey().once("value").then(function (snapshot) { return snapshot.val(); }).then(function (blockchain) {
                 blockchain = Object.values(blockchain).map(function (block) {
                     block.data = block._data ? JSON.parse(block._data) : {};
                     return block;
                 });
-                console.debug("Got blockchain", blockchain);
+                console.debug("Got blockchain", blockchain.length);
                 store.replaceChain(blockchain);
+                listenForNextBlock();
                 return Object.assign(store, {
                     dispatch: dispatch
                 });

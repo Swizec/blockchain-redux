@@ -29,6 +29,23 @@ export default function(firebaseApp) {
                 });
         }
 
+        function listenForNextBlock() {
+            const nextIndex = store.getLastBlock().index + 1;
+
+            console.log("Listening for", nextIndex);
+
+            db
+                .ref(`blockchain/${block.index}`)
+                .once("value")
+                .then(snapshot => {
+                    console.log("Received block from outside");
+
+                    // TODO: potential conflict with local last block
+                    store.addBlock(snapshot.val());
+                    listenForNextBlock();
+                });
+        }
+
         function initFromFirebase() {
             return db
                 .ref("blockchain")
@@ -41,9 +58,11 @@ export default function(firebaseApp) {
                         return block;
                     });
 
-                    console.debug("Got blockchain", blockchain);
+                    console.debug("Got blockchain", blockchain.length);
 
                     store.replaceChain(blockchain);
+
+                    listenForNextBlock();
 
                     return Object.assign(store, {
                         dispatch
