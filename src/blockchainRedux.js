@@ -39,8 +39,6 @@ function createStore(reducer, preloadedState, enhancer) {
         const nextData = reducer(lastBlock.data, action);
 
         addBlock(new Block({ previousBlock: lastBlock, data: nextData }));
-
-        notifyListeners();
     }
 
     function subscribe(listener) {
@@ -54,6 +52,7 @@ function createStore(reducer, preloadedState, enhancer) {
     function addBlock(newBlock) {
         if (isValidNewBlock(newBlock, getLastBlock())) {
             blockchain.push(newBlock);
+            notifyListeners();
         }
     }
 
