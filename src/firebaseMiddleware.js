@@ -31,19 +31,25 @@ export default function(firebaseApp) {
 
         function listenForNextBlock() {
             const nextIndex = store.getLastBlock().index + 1;
+            const valueHandler = function(snapshot) {
+                if (snapshot.exists()) {
+                    let block = snapshot.val();
+                    block.data = block._data ? JSON.parse(block._data) : {};
 
-            console.log("Listening for", nextIndex);
-
-            db
-                .ref(`blockchain/${block.index}`)
-                .once("value")
-                .then(snapshot => {
-                    console.log("Received block from outside");
+                    console.log("Received block from outside", block);
 
                     // TODO: potential conflict with local last block
-                    store.addBlock(snapshot.val());
+                    store.addBlock(block);
+                    db
+                        .ref(`blockchain/${nextIndex}`)
+                        .off("value", valueHandler);
+
                     listenForNextBlock();
-                });
+                }
+            };
+
+            db.ref(`blockchain/${nextIndex}`).on("value", valueHandler);
+            console.log("Listening for", nextIndex);
         }
 
         function initFromFirebase() {

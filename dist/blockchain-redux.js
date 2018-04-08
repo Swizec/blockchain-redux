@@ -148,12 +148,18 @@ function firebaseMiddleware (firebaseApp) {
         
         function listenForNextBlock() {
             var nextIndex = store.getLastBlock().index + 1;
+            var valueHandler = function (snapshot) {
+                if (snapshot.exists()) {
+                    var block = snapshot.val();
+                    block.data = block._data ? JSON.parse(block._data) : {};
+                    console.log("Received block from outside", block);
+                    store.addBlock(block);
+                    db.ref(("blockchain/" + nextIndex)).off("value", valueHandler);
+                    listenForNextBlock();
+                }
+            };
+            db.ref(("blockchain/" + nextIndex)).on("value", valueHandler);
             console.log("Listening for", nextIndex);
-            db.ref(("blockchain/" + (block.index))).once("value").then(function (snapshot) {
-                console.log("Received block from outside");
-                store.addBlock(snapshot.val());
-                listenForNextBlock();
-            });
         }
         
         function initFromFirebase() {
