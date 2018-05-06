@@ -1,4 +1,4 @@
-export default function(firebaseApp) {
+export default function (firebaseApp) {
     const db = firebaseApp.database();
 
     return createStore => (...args) => {
@@ -31,7 +31,7 @@ export default function(firebaseApp) {
 
         function listenForNextBlock() {
             const nextIndex = store.getLastBlock().index + 1;
-            const valueHandler = function(snapshot) {
+            const valueHandler = function (snapshot) {
                 if (snapshot.exists()) {
                     let block = snapshot.val();
                     block.data = block._data ? JSON.parse(block._data) : {};
